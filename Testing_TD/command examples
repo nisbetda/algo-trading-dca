@@ -1,0 +1,35 @@
+
+# Get real time quotes for msft, aapl, and fb
+quotes_response = td_client.get_quotes(instruments = ['MSFT', 'AAPL', 'FB'])
+# line below prints out the quotes
+# pprint.pprint(quotes_response)
+
+# Positions and Orders for account or accounts
+positions_and_orders = td_client.get_accounts(account = ACCOUNT_NUMBER, fields = ['positions', 'orders',])
+# pprint.pprint(positions_and_orders)
+
+
+
+# Find the most active stocks in a particular market 
+# Stocks with the most percent gain in the dow jones
+# only works when market is open
+dow_movers = td_client.get_movers(market = '$DJI', direction = 'up', change = 'percent')
+#pprint.pprint(dow_movers)
+
+# historical data for msft 
+# 30 minute chart for the past 2 days
+historical_chart = td_client.get_price_history(symbol= 'MSFT', period_type = 'day', period = 2, frequency_type = 'minute', frequency = 30, extended_hours = True)
+#pprint.pprint(historical_chart)
+
+# historical chart with a custom time range
+custom_range = td_client.get_price_history(symbol= 'MSFT', period_type = 'day', period = 2, frequency_type = 'minute', frequency = 30, extended_hours = True)
+pprint.pprint(custom_range)
+
+
+
+
+
+
+
+
+
