@@ -1,0 +1,127 @@
+
+#A Limit Order for FB @ $20.0
+limit_order = {
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 20.0,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "FB",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+}
+
+# Place the order called "limit_order"
+# new_order_response = td_client.place_order(account = ACCOUNT_NUMBER, order = limit_order)
+# pprint.pprint(new_order_response)
+
+# Get the order id
+# order_id = new_order_response['order_id']
+# pprint.pprint(order_id)
+
+#A new Limit Order for FB @ $20.20
+new_limit_order = {
+    "orderType": "LIMIT",
+    "session": "NORMAL",
+    "duration": "DAY",
+    "price": 20.20,
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "FB",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+}
+
+# the modify order will REPLACE the order (using the order_id), then place a new one (new_limit_order)
+modify_order_response = td_client.modify_order(
+    account=ACCOUNT_NUMBER, 
+    order=new_limit_order, 
+    order_id=order_id
+)
+
+modified_order_id = modify_order_response['order_id']
+pprint.pprint(modified_order_id)
+
+# Cancel an existing order
+cancel_order_response = td_client.cancel_order(
+    account=ACCOUNT_NUMBER, 
+    order_id=modified_order_id
+)
+pprint.pprint(cancel_order_response)
+
+
+
+# A buy market order for APPL
+market_buy_order = {
+    "orderType": "MARKET",
+    "session": "NORMAL",
+    "duration": "DAY",
+    
+    "orderStrategyType": "SINGLE",
+    "orderLegCollection": [
+      {
+        "instruction": "BUY",
+        "quantity": 1,
+        "instrument": {
+          "symbol": "AAPL",
+          "assetType": "EQUITY"
+        }
+      }
+    ]
+
+}
+
+trigger_child_order = {
+      // This is a buy order, this will trigger the other one.
+  "orderStrategyType": "TRIGGER",
+  "session": "NORMAL",
+  "orderType": "LIMIT",
+  "price": 50.0,
+  "orderLegCollection": [
+    {
+      "instruction": "BUY",
+      "quantity": 1,
+      "instrument": {
+        "assetType": "EQUITY",
+        "symbol": "MSFT"
+      }
+    }
+  ]
+
+   // These are the child orders, these will take effect when the buy order is filled.
+  "childOrderStrategies": [
+    {
+      // This is the 2nd order that locks in profit, the price here is higher (80) than my original buy order (50) and I switch instructions.
+      // Can trigger more than one order here
+      "orderStrategyType": "SINGLE",
+      "session": "NORMAL",
+      "duration": "DAY",
+      "orderType": "LIMIT",
+      "price": 80.0,
+      "orderLegCollection": [
+        {
+          "instruction": "SELL",
+          "quantity": 1,
+          "instrument": {
+            "assetType": "EQUITY",
+            "symbol": "MSFT"
+          }
+        }
+      ]
+    }
+  ]
+}
+
