@@ -6,4 +6,4 @@ REDIRECT_URI = 'https://localhost/mytest'
 JSON_PATH = '/Users/daltonnisbett/Documents/Testing_TD/td_state.json'
 
 # account number
-ACCOUNT_NUMBER = '270145485'
+ACCOUNT_NUMBER = ''
